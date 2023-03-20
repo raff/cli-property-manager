@@ -644,8 +644,11 @@ Are you sure you want to deactivate the property '${propertyName}' on network '$
             consoleLogger.info("update property info: ", helpers.jsonStringify(createPropertyInfo));
         } else {
             let project = await devops.importProperty(createPropertyInfo);
-            consoleLogger.info(`Imported ${project.getName()}. The latest version is: v${project.loadEnvironmentInfo().latestVersionInfo.propertyVersion}`);
-
+            let versionMessage = `The latest version is: v${project.loadEnvironmentInfo().latestVersionInfo.propertyVersion}`;
+            if (createPropertyInfo.propertyVersion && project.loadEnvironmentInfo().latestVersionInfo.propertyVersion != createPropertyInfo.propertyVersion) {
+                versionMessage = `Imported version is: v${createPropertyInfo.propertyVersion} ` + versionMessage;
+            }
+            consoleLogger.info(`Imported ${project.getName()}. ${versionMessage}`);
         }
     };
 
