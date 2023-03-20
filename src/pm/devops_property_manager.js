@@ -129,7 +129,9 @@ class DevopsPropertyManager extends Devops {
         createPropertyInfo.propertyId = helpers.parsePropertyId(results.versions.items[0].propertyId);
         let propertyInfo = await project.getPropertyInfo(createPropertyInfo.propertyId);
 
-        createPropertyInfo.propertyVersion = propertyInfo.propertyVersion;
+        if (!createPropertyInfo.propertyVersion) {
+            createPropertyInfo.propertyVersion = propertyInfo.propertyVersion;
+        }
         logger.info(`Attempting to load rule tree for property id: ${createPropertyInfo.propertyId} and version: ${createPropertyInfo.propertyVersion}`);
         let ruleTree = await project.getPropertyRuleTree(createPropertyInfo.propertyId, createPropertyInfo.propertyVersion);
         createPropertyInfo.groupId = helpers.parseGroupId(propertyInfo.groupId);
