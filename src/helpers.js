@@ -137,6 +137,13 @@ module.exports = {
         return parseNumericResourceId(versionNum, null, "property version", "illegal_property_version");
     },
 
+    parsePropertyVersionOrName: function(versionNum) {
+        if (versionNum == "latest" || versionNum == "production" || versionNum == "staging") {
+            return versionNum;
+        }
+        return parseNumericResourceId(versionNum, null, "property version", "illegal_property_version");
+    },
+
     parseIpVersionBehavior: function(ipVersionBehavior) {
         if (!_.isString(ipVersionBehavior)) {
             return "IPV6_COMPLIANCE";

@@ -126,9 +126,18 @@ class DevopsPropertyManager extends Devops {
             throw new errors.ArgumentError(`Can't find any version of property '${createPropertyInfo.propertyName}'`,
                 "property_does_not_exist_on_server", createPropertyInfo.propertyName);
         }
-        createPropertyInfo.propertyId = helpers.parsePropertyId(results.versions.items[0].propertyId);
+        let item = results.versions.items[0];
+        if (createPropertyInfo.propertyVersion == "latest") {
+            delete(createPropertyInfo.propertyVersion);
+        } else if (createPropertyInfo.propertyVersion == "staging") {
+            item = results.versions.items.find(item => item.stagingStatus==='ACTIVE')
+            createPropertyInfo.propertyVersion = item.propertyVersion;
+        } else if (createPropertyInfo.propertyVersion == "production") {
+            item = results.versions.items.find(item => item.productionStatus==='ACTIVE')
+            createPropertyInfo.propertyVersion = item.propertyVersion;
+        }
+        createPropertyInfo.propertyId = helpers.parsePropertyId(item.propertyId);
         let propertyInfo = await project.getPropertyInfo(createPropertyInfo.propertyId);
-
         if (!createPropertyInfo.propertyVersion) {
             createPropertyInfo.propertyVersion = propertyInfo.propertyVersion;
         }
